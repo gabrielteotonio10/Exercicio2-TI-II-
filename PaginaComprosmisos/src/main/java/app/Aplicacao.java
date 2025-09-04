@@ -11,9 +11,8 @@ public class Aplicacao {
 	public static void main(String[] args) throws Exception {
 		
 		UsuarioDAO usuarioDAO = new UsuarioDAO();
-		
 		System.out.println("\n\n==== Inserir usuário === ");
-		Usuario usuario = new Usuario(11, "pablo", "pablo",'M');
+		Usuario usuario = new Usuario(12, "pablo", "pablo",'M');
 		if(usuarioDAO.insert(usuario) == true) {
 			System.out.println("Inserção com sucesso -> " + usuario.toString());
 		}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="login.css">
+    <title>Login e Cadastro</title>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="title">Acesso à Plataforma</h1>
+
+    <div class="tabs">
+        <button id="tab-login" class="active">Login</button>
+        <button id="tab-cadastro">Cadastro</button>
+    </div>
+
+    <div id="login-section" class="form-section active">
+		<form id="form-login" action="/autenticarUsuario" method="post">
+            <div class="form-group">
+                <label for="login-username">Login:</label>
+                <input type="text" id="login-username" name="login" required>
+            </div>
+            <div class="form-group">
+                <label for="login-password">Senha:</label>
+                <input type="password" id="login-password" name="senha" required>
+            </div>
+            <button type="submit" class="btn-submit btn-login"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+        </form>
+    </div>
+	
+    <div id="cadastro-section" class="form-section">
+        <form id="form-cadastro" action="/cadastrarUsuario" method="post">
+            <div class="form-group">
+                <label for="cadastro-codigo">Código:</label>
+                <input type="number" id="cadastro-codigo" name="codigo" required>
+            </div>
+            <div class="form-group">
+                <label for="cadastro-username">Login:</label>
+                <input type="text" id="cadastro-username" name="login" required>
+            </div>
+            <div class="form-group">
+                <label for="cadastro-password">Senha:</label>
+                <input type="password" id="cadastro-password" name="senha" required>
+            </div>
+            <div class="form-group">
+                <label for="cadastro-sexo">Sexo:</label>
+                <select id="cadastro-sexo" name="sexo" required>
+                    <option value="">Selecione...</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Feminino</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-submit"><i class="fas fa-user-plus"></i> Cadastrar</button>
+        </form>
+    </div>
+
+</div>
+
+<script>
+    // Lógica para alternar entre as abas de Login e Cadastro
+    document.getElementById("tab-login").addEventListener("click", () => {
+        document.getElementById("tab-login").classList.add("active");
+        document.getElementById("tab-cadastro").classList.remove("active");
+        document.getElementById("login-section").classList.add("active");
+        document.getElementById("cadastro-section").classList.remove("active");
+    });
+
+    document.getElementById("tab-cadastro").addEventListener("click", () => {
+        document.getElementById("tab-cadastro").classList.add("active");
+        document.getElementById("tab-login").classList.remove("active");
+        document.getElementById("cadastro-section").classList.add("active");
+        document.getElementById("login-section").classList.remove("active");
+    });
+</script>
+
+</body>
+</html>

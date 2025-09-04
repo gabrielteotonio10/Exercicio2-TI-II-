@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="front.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>Página de Compromissos</title>
+</head>
+<body>
+<main>
+    <div class="btn-login-container">
+        <a href="login.html" class="btn-login">Login</a>
+    </div>
+    <h1 class="titulo-do-projeto">PÁGINA DE COMPROMISSOS</h1>
+</main>
+<div>
+    <p class="explicacao">
+        <strong class="subtitulos-explicacao">Otimize sua Produtividade:</strong>
+        Um Guia Completo para o seu Dia a Dia: Mantenha sua vida organizada e sem estresse com nosso sistema de gerenciamento de compromissos.
+        Gerenciamento Detalhado do Dia: Descrição do Dia : Adicione anotações importantes para cada dia, ajudando você a contextualizar e planejar suas atividades.
+        Compromissos Personalizados: Registre cada compromisso com todos os detalhes: data e horários de início e término.
+        <br><br>
+        <strong class="subtitulos-explicacao">Ferramentas de Controle e Acesso:</strong>
+        Consulta por Data: Encontre rapidamente todos os compromissos de um dia específico com nossa função de busca.
+        Remoção Simples: Precisa cancelar um evento? Remova-o facilmente usando o ID.
+        Visão Geral Completa: Visualize a lista completa de todos os seus compromissos, incluindo todas as informações, para uma visão abrangente de sua rotina.
+    </p>
+</div>
+
+<div class="entrada-de-informacoes">
+    <h2 class="titulo-entrada-de-informacoes">Entrada de informações</h2>
+<form id="form-cadastrar" action="cadastrarInformacoes" method="post">
+    <div class="form-row">
+        <div class="form-group">
+            <label for="descricao">Descrição:</label>
+            <input type="text" id="descricao" name="descricao" placeholder="festa da.., chá de bebê..." required>
+        </div>
+        <div class="form-group">
+            <label for="data-cadastrar">Data:</label>
+            <input type="date" id="data-cadastrar" name="data" required>
+        </div>
+        <div class="form-group">
+            <label for="hora-inicio-cadastrar">Hora de início:</label>
+            <input type="text" id="hora-inicio-cadastrar" name="hora-de-inicio" placeholder="13:00 ou 13h00" pattern="^([0-1]?[0-9]|2[0-3])[:hH]?[0-5][0-9]$" title="Formato HH:MM ou HHhMM (ex: 09:30, 14h00)" required>
+        </div>
+        <div class="form-group">
+            <label for="hora-termino-cadastrar">Hora de término:</label>
+            <input type="text" id="hora-termino-cadastrar" name="hora-de-termino" placeholder="21:00 ou 21h00" pattern="^([0-1]?[0-9]|2[0-3])[:hH]?[0-5][0-9]$" title="Formato HH:MM ou HHhMM (ex: 09:30, 14h00)" required>
+        </div>
+    </div>
+    <button type="submit" class="btn-cadastrar"><i class="fas fa-plus-circle"></i> Cadastrar</button>
+</form>
+</div>
+
+<div class="saida-de-informacoes">
+    <h2 class="titulo-saida-de-informacoes">Informações Cadastradas</h2>
+    <div class="form-group">
+        <label for="data-pesquisar">Pesquisar compromissos por data:</label>
+        <input type="date" id="data-pesquisar">
+        <button id="btn-mostrar-compromisso" data-action="pesquisarPorData"><i class="fas fa-search"></i> Pesquisar</button>
+    </div>
+    <div class="form-group">
+        <label for="id-remover">Remover um compromisso (ID):</label>
+        <input type="number" id="id-remover" min="1" placeholder="Digite o ID">
+        <button id="btn-remover-compromisso" data-action="removerPorId"><i class="fas fa-trash-alt"></i> Remover</button>
+    </div>
+    <div class="form-group">
+        <label>Mostrar todos os compromissos:</label>
+        <button id="btn-mostrar-todos-compromissos" data-action="mostrarTodos"><i class="fas fa-list"></i> Mostrar Todos</button>
+    </div>
+    
+    <div id="resultados">
+        <h3><i class="fas fa-clipboard-list"></i> Resultados:</h3>
+        <pre id="resultados-texto"></pre>
+    </div>
+</div>
+
+<script>
+document.getElementById('btn-mostrar-compromisso').addEventListener('click', function() {
+    const data = document.getElementById('data-pesquisar').value;
+    if (data) {
+        realizarRequisicao('pesquisarPorData', 'data', data);
+    }
+});
+
+document.getElementById('btn-remover-compromisso').addEventListener('click', function() {
+    const id = document.getElementById('id-remover').value;
+    if (id) {
+        realizarRequisicao('removerPorId', 'id', id);
+    }
+});
+
+document.getElementById('btn-mostrar-todos-compromissos').addEventListener('click', function() {
+    realizarRequisicao('mostrarTodos');
+});
+
+function realizarRequisicao(acao, paramNome, paramValor) {
+    const url = new URL('gerenciarInformacoes', window.location.origin);
+    const params = { acao: acao };
+
+    if (paramNome && paramValor) {
+        params[paramNome] = paramValor;
+    }
+
+    const searchParams = new URLSearchParams(params);
+
+    fetch(url.pathname, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: searchParams
+    })
+    .then(response => response.json())
+    .then(data => {
+        const resultadosTexto = document.getElementById('resultados-texto');
+        if (typeof data === 'string') {
+            resultadosTexto.textContent = data;
+        } else if (data.status) {
+            resultadosTexto.textContent = data.mensagem;
+        } else {
+            resultadosTexto.textContent = JSON.stringify(data, null, 2);
+        }
+    })
+    .catch(error => {
+        console.error('Erro na requisição:', error);
+        document.getElementById('resultados-texto').textContent = 'Erro ao processar a requisição.';
+    });
+}
+</script>
+</body>
+</html>
